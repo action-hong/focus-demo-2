@@ -2,7 +2,7 @@
 
 ## TODO
 
-- [ ] limitintEl 限制可聚焦的范围
+- [x] limitintEl 限制可聚焦的范围
 - [ ] 动态disable 可聚焦
 - [ ] 可自定义聚焦点（disable自动聚焦）
 - [ ] 滚动聚焦，聚焦时自动滚动 （设置scrollEl

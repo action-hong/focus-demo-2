@@ -11,9 +11,35 @@ class MyFocus {
     this.className = option.className ?? 'tv-focus'
     this.itemName = option.itemName ?? 'focusable'
     this.focused = option.focused ?? 'focused'
+    this.focusdisable = option.focusdisable ?? 'focusdisable'
 
     this.handleDown = this.handleDown.bind(this)
     this.handleUp = this.handleUp.bind(this)
+  }
+
+  /**
+   * 
+   * @param {HTMLElement} el 
+   */
+  setLimitingElement(el) {
+    if (el === null) {
+      const all = document.querySelectorAll(`[${this.focusdisable}]`)
+      for (const el of all) {
+        this._setElementFocusStatus(el, true)
+      }
+    } else {
+      // 所有都disable
+      const all = document.querySelectorAll(`[${this.itemName}]`)
+      for (const el of all) {
+        this._setElementFocusStatus(el, false)
+      }
+
+      // 找到限定范围内disable的，变成can focus
+      const canFocus = el.querySelectorAll(`[${this.focusdisable}]`)
+      for (const el of canFocus) {
+       this._setElementFocusStatus(el, true) 
+      }
+    }
   }
 
   bindEvent() {
@@ -158,6 +184,22 @@ class MyFocus {
 
     el.setAttribute(this.focused, true)
     el.classList.add(this.className)
+  }
+
+  /**
+   * 
+   * @param {HTMLElement} el 
+   */
+  _setElementFocusStatus(el, status) {
+    if (status) {
+      el.removeAttribute(this.focusdisable)
+      el.setAttribute(this.itemName, true)
+    } else {
+      el.removeAttribute(this.itemName)
+      el.removeAttribute(this.focused)
+      el.classList.remove(this.className)
+      el.setAttribute(this.focusdisable, true)
+    }
   }
 }
 

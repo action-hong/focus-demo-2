@@ -7,7 +7,12 @@
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app" class="clearfix"></div>
+    <div id="app">
+      <button onclick="setLimitingEl(0);">切换limiting 1</button>
+      <button onclick="setLimitingEl(1);">切换limiting 2</button>
+      <button onclick="resetLimiting();">重置limiting</button>
+      <div class="wrapper"></div>
+    </div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>
