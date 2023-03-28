@@ -1,7 +1,14 @@
 import { MyFocus } from "./src/utils";
 import './style.css'
 
-const focus = new MyFocus()
+const focus = new MyFocus({
+  keys: {
+    left: [37, 65],
+    right: [39, 68],
+    up: [38, 87],
+    down: [40, 83],
+  }
+})
 
 focus.bindEvent()
 
@@ -45,7 +52,11 @@ app.addEventListener('onFocus', e => {
 const all = document.querySelectorAll('.item')
 
 all[2].addEventListener('right', e => {
-  console.log(e);
+  // console.log(e);
   focus.requestFocus(all[10])
 })
 
+
+window.addEventListener('keyup', e => {
+  console.log(e.key, e.keyCode);
+})

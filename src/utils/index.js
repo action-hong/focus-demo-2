@@ -13,8 +13,27 @@ class MyFocus {
     this.focused = option.focused ?? 'focused'
     this.focusdisable = option.focusdisable ?? 'focusdisable'
 
+    this.initKeys({
+      left: [37],
+      right: [39],
+      up: [38],
+      down: [40],
+      ...option.keys
+    })
+
     this.handleDown = this.handleDown.bind(this)
     this.handleUp = this.handleUp.bind(this)
+  }
+
+  initKeys(keys) {
+    this.keys = keys
+    this.codeToKey = Object.entries(this.keys)
+      .reduce((a, b) => {
+        b[1].forEach(code => {
+          a[code] = b[0]
+        })
+        return a
+      }, {})
   }
 
   /**
@@ -53,8 +72,6 @@ class MyFocus {
   }
 
   handleDown(event) {
-    const key = event.key
-    if (!valid.includes(key)) return
   }
 
   /**
@@ -63,10 +80,16 @@ class MyFocus {
    * @returns 
    */
   handleUp(event) {
-    const key = event.key
-    if (!valid.includes(key)) return
+    const code = event.keyCode
 
-    event.preventDefault()
+    const key = this.codeToKey[code]
+
+    if (['left', 'right', 'up', 'down'].includes(key)) {
+      this.handleDirection(key)
+    }
+  }
+
+  handleDirection(key) {
 
     const focusEl = this._getFocus()
 
@@ -86,9 +109,8 @@ class MyFocus {
       // 2. 当前有焦点
 
       // 分发事件
-      const event = key.replace('Arrow', '').toLowerCase()
       this._skipEvent = false
-      focusEl.dispatchEvent(new CustomEvent(event, {
+      focusEl.dispatchEvent(new CustomEvent(key, {
         bubbles: true,
       }))
 
@@ -114,7 +136,7 @@ class MyFocus {
         let f = false
 
         // 垂直或水平距离不能太远
-        if (key === 'ArrowUp' || key === 'ArrowDown') {
+        if (key === 'up' || key === 'down') {
           t = Math.abs(centerX - position.centerX)
         } else {
           t = Math.abs(centerY - position.centerY)
@@ -122,11 +144,11 @@ class MyFocus {
 
         // 过滤出有效方向的
         // 例如向上，自然只需要位置在他上方的
-        if (key === 'ArrowUp') {
+        if (key === 'up') {
           f = position.bottom < top
-        } else if (key === 'ArrowDown') {
+        } else if (key === 'down') {
           f = position.bottom > bottom
-        } else if (key === 'ArrowLeft') {
+        } else if (key === 'left') {
           f = position.left < left
         } else {
           f = position.right > right
@@ -141,11 +163,11 @@ class MyFocus {
         // 向上
         a = a.position
         b = b.position
-        if (key === 'ArrowUp') {
+        if (key === 'up') {
           return b.bottom - a.bottom
-        } else if (key === 'ArrowDown') {
+        } else if (key === 'down') {
           return a.top - b.top
-        } else if (key === 'ArrowLeft') {
+        } else if (key === 'left') {
           return b.right - a.right
         } else {
           return a.left - b.left
