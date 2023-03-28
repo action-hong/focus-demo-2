@@ -18,6 +18,7 @@ class MyFocus {
       right: [39],
       up: [38],
       down: [40],
+      enter: [13],
       ...option.keys
     })
 
@@ -84,8 +85,20 @@ class MyFocus {
 
     const key = this.codeToKey[code]
 
-    if (['left', 'right', 'up', 'down'].includes(key)) {
+    if (key === 'enter') {
+      this.handleClick()
+    } else if (['left', 'right', 'up', 'down'].includes(key)) {
       this.handleDirection(key)
+    }
+  }
+
+  handleClick() {
+    const el = this._getFocus()
+
+    if (el) {
+      el.dispatchEvent(new CustomEvent('click', {
+        bubbles: true
+      }))
     }
   }
 

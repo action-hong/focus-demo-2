@@ -12,20 +12,33 @@ const focus = new MyFocus({
 
 focus.bindEvent()
 
+const data = {
+  count: new Array(48).fill(0)
+}
 
+
+const wrapper = document.querySelector('.wrapper');
 function initTest() {
   let content = ''
   for (let j = 0; j < 2; j++) {
     content += `<div class="container clearfix">`
     for (let i = 0; i < 24; i++) {
+      const index = j * 24 + i
       content += `<div
       class="item"
+      data-index="${index}"
       ${focus.itemName}
-      >${j}-${i}</div>`
+      >${data.count[index]}</div>`
     }
     content += `</div>`
   }
-  document.querySelector('.wrapper').innerHTML = content
+  wrapper.innerHTML = content
+  wrapper.addEventListener('click', e => {
+    const index = e.target.dataset.index
+    if (typeof index === 'undefined') return
+    e.target.innerText = `${++data.count[index]}`
+  })
+
 }
 
 window.setLimitingEl = function(index) {
@@ -52,7 +65,6 @@ app.addEventListener('onFocus', e => {
 const all = document.querySelectorAll('.item')
 
 all[2].addEventListener('right', e => {
-  // console.log(e);
   focus.requestFocus(all[10])
 })
 
