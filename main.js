@@ -8,13 +8,13 @@ focus.bindEvent()
 
 function initTest() {
   let content = ''
-  for (let i = 0; i < 2; i++) {
+  for (let j = 0; j < 2; j++) {
     content += `<div class="container clearfix">`
     for (let i = 0; i < 24; i++) {
       content += `<div
       class="item"
       ${focus.itemName}
-      ></div>`
+      >${j}-${i}</div>`
     }
     content += `</div>`
   }
@@ -31,3 +31,21 @@ window.resetLimiting = function() {
 }
 
 initTest()
+
+const app = document.querySelector('#app')
+
+app.addEventListener('onBlur', e => {
+  // console.log('onBlur', e.detail.innerText);
+})
+
+app.addEventListener('onFocus', e => {
+  // console.log('onFocus', e.detail.innerText);
+})
+
+const all = document.querySelectorAll('.item')
+
+all[2].addEventListener('right', e => {
+  console.log(e);
+  focus.requestFocus(all[10])
+})
+

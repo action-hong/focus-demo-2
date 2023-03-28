@@ -57,10 +57,16 @@ class MyFocus {
     if (!valid.includes(key)) return
   }
 
+  /**
+   * 
+   * @param {KeyboardEvent} event 
+   * @returns 
+   */
   handleUp(event) {
     const key = event.key
     if (!valid.includes(key)) return
 
+    event.preventDefault()
 
     const focusEl = this._getFocus()
 
@@ -78,6 +84,17 @@ class MyFocus {
       this._setFocus(next.el)
     } else {
       // 2. 当前有焦点
+
+      // 分发事件
+      const event = key.replace('Arrow', '').toLowerCase()
+      this._skipEvent = false
+      focusEl.dispatchEvent(new CustomEvent(event, {
+        bubbles: true,
+      }))
+
+      // 方向移动时，已经自定义聚焦元素了
+      if (this._skipEvent) return
+
       const {
         position
       } = this._computeElementPosition(focusEl)
@@ -139,6 +156,19 @@ class MyFocus {
     }
   }
 
+  /**
+   * 
+   * @param {HTMLElement} el 
+   * @returns 
+   */
+  requestFocus(el) {
+    if (!el) return
+    if (el.getAttribute(this.focusdisable)) return
+
+    this._setFocus(el)
+    this._skipEvent = true
+  }
+
   _getCanFocusElementPosition() {
     const eles = document.querySelectorAll(`[${this.itemName}]`)
     return [...eles].map(el => this._computeElementPosition(el))
@@ -180,10 +210,18 @@ class MyFocus {
     if (origin) {
       origin.removeAttribute(this.focused)
       origin.classList.remove(this.className)
+      origin.dispatchEvent(new CustomEvent('onBlur', {
+        bubbles: true,
+        detail: origin
+      }))
     }
 
     el.setAttribute(this.focused, true)
     el.classList.add(this.className)
+    el.dispatchEvent(new CustomEvent('onFocus', {
+      bubbles: true,
+      detail: el
+    }))
   }
 
   /**
