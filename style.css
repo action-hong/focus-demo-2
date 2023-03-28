@@ -1,0 +1,20 @@
+body {
+}
+
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.item {
+  margin: 10px;
+  background-color: skyblue;
+  float: left;
+  width: 100px;
+  height: 100px;
+}
+
+.item.tv-focus {
+  background-color: red;
+}
